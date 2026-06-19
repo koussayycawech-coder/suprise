@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>اضغطني</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    width: 100%;
+    height: 100%;
+    background: #000;
+    font-family: Arial, sans-serif;
+    overflow: hidden;
+  }
+  #main-view {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    text-align: center;
+  }
+  #counter {
+    color: #fff;
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 50px;
+    direction: ltr;
+  }
+  #btn {
+    width: 220px;
+    height: 220px;
+    border-radius: 50%;
+    background: #c01818;
+    color: #fff;
+    border: none;
+    font-size: 26px;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 0 0 8px rgba(192,24,24,0.25);
+    transition: transform 0.08s;
+  }
+  #btn:active {
+    transform: scale(0.95);
+  }
+  #scare-view {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 9999;
+  }
+  #scare-view img {
+    width: 100vw;
+    height: 100vh;
+    object-fit: cover;
+    display: block;
+  }
+  #reset-btn {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 16px;
+    padding: 10px 28px;
+    border-radius: 8px;
+    cursor: pointer;
+    background: rgba(0,0,0,0.6);
+    color: #fff;
+    border: 1px solid #555;
+    z-index: 10000;
+  }
+</style>
+</head>
+<body>
+
+  <audio id="scream-sound" src="scary.mp3" preload="auto"></audio>
+
+  <div id="main-view">
+    <div id="counter">عدد الضغطات: <span id="count">0</span> / 1000</div>
+    <button id="btn">اضغطني</button>
+  </div>
+
+  <div id="scare-view">
+    <img src="scary.gif" alt="صورة مخيفة">
+    <button id="reset-btn">إعادة المحاولة</button>
+  </div>
+
+<script>
+  let count = 0;
+  const scareAt = 250;
+  const total = 1000;
+  let triggered = false;
+
+  const countEl = document.getElementById('count');
+  const btn = document.getElementById('btn');
+  const mainView = document.getElementById('main-view');
+  const scareView = document.getElementById('scare-view');
+  const resetBtn = document.getElementById('reset-btn');
+  const screamSound = document.getElementById('scream-sound');
+
+  btn.addEventListener('click', () => {
+    count++;
+    countEl.textContent = count;
+
+    if (count >= scareAt && !triggered) {
+      triggered = true;
+      screamSound.play();
+      mainView.style.display = 'none';
+      scareView.style.display = 'block';
+    }
+  });
+
+  resetBtn.addEventListener('click', () => {
+    count = 0;
+    triggered = false;
+    countEl.textContent = '0';
+    scareView.style.display = 'none';
+    mainView.style.display = 'flex';
+    screamSound.pause();
+    screamSound.currentTime = 0;
+  });
+</script>
+
+</body>
+</html>
